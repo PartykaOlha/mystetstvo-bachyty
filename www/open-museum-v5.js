@@ -77,10 +77,11 @@ let currentData=null,saveData=null;
 function bind(data,save){currentData=data;saveData=save;data.photoMissions=data.photoMissions||{};}
 function photosFor(i){
  const group=map[i]||['wave'];let selected=group.map(byKey).filter(Boolean);
- if(!selected.length){const prefer=i>=8&&i<=15?'photograph':'painting';selected=catalogue.filter(x=>x.type===prefer).slice(0,2)}
+ const prefer=i>=8&&i<=15?'photograph':'painting';
+ for(const item of catalogue.filter(x=>x.type===prefer)){if(selected.length>=2)break;if(!selected.some(w=>w.key===item.key))selected.push(item)}
  return selected;
 }
-function cover(k){const list=[['wave','paris-rain'],['grande-jatte','bedroom'],['flatiron','steerage'],['sunlight','venice'],['paris-rain','wave'],['bedroom','grande-jatte'],['wave','child-bath']];return (list[k]||[]).map(byKey).find(Boolean)||catalogue[k%Math.max(1,catalogue.length)]}
+function cover(k){const list=[['wave','paris-rain'],['grande-jatte','bedroom'],['flatiron','steerage'],['sunlight','venice'],['paris-rain','wave'],['bedroom','grande-jatte'],['wave','child-bath']];return (list[k]||[]).map(byKey).find(Boolean)||catalogue.find(w=>w.type===(k===2||k===3?'photograph':'painting'))||catalogue[0]}
 function image(work,cls='open-card-img'){
  return '<img src="'+clean(work.file)+'" class="'+cls+'" alt="'+clean(work.title+' — '+work.artist)+'" loading="lazy" decoding="async" onclick="ART_PHOTOS.preview('+JSON.stringify(work.key).replaceAll('"','&quot;')+')" />';
 }
@@ -103,7 +104,7 @@ function preview(key){
  const w=byKey(key);if(!w)return;
  const old=document.getElementById('openMuseumViewer');if(old)old.remove();
  const el=document.createElement('div');el.id='openMuseumViewer';el.className='open-viewer';
- el.innerHTML='<div class="open-viewer-inner"><button onclick="document.getElementById(\'openMuseumViewer\').remove()" class="open-viewer-close" aria-label="Закрити фото">✕ Закрити</button>'+image({...w,file:w.file},'open-viewer-img')+'<div><h3>'+clean(w.title)+'</h3><p>'+clean(w.artist)+' · Wikimedia Commons · Public Domain</p><p>Торкнися зображення двома пальцями, щоб збільшити його стандартним жестом перегляду, або розглядай деталі на планшеті.</p></div></div>';
+ el.innerHTML='<div class="open-viewer-inner"><button onclick="document.getElementById(\'openMuseumViewer\').remove()" class="open-viewer-close" aria-label="Закрити фото">✕ Закрити</button><img class="open-viewer-img" src="'+clean(w.file)+'" alt="'+clean(w.title)+'"><div><h3>'+clean(w.title)+'</h3><p>'+clean(w.artist)+' · Wikimedia Commons · Public Domain</p><p>Торкнися зображення двома пальцями, щоб збільшити його стандартним жестом перегляду, або розглядай деталі на планшеті.</p></div></div>';
  el.onclick=e=>{if(e.target===el)el.remove()};document.body.appendChild(el);
 }
 function capture(i,input){
