@@ -27,6 +27,8 @@ jobs:
           test -n "$SDKMANAGER" || { echo "Android sdkmanager missing"; exit 1; }
           yes | "$SDKMANAGER" --sdk_root="$ANDROID_HOME" --licenses > /dev/null || true
           "$SDKMANAGER" --sdk_root="$ANDROID_HOME" "platforms;android-35" "build-tools;35.0.0" "platform-tools"
+      - name: Install artwork image optimizer
+        run: npm install --no-save --no-package-lock sharp --no-audit --no-fund
       - name: Fetch and verify public-domain artworks and archival photographs
         run: node scripts/fetch-open-images.mjs
       - name: Validate scripts and all creative exercises
