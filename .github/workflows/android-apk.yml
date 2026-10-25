@@ -35,6 +35,21 @@ jobs:
         run: npx cap add android
       - name: Sync project
         run: npx cap sync android
+      - name: Set custom Atelier launcher icon
+        shell: bash
+        run: |
+          mkdir -p android/app/src/main/res/drawable
+          cat > android/app/src/main/res/drawable/ic_viktoria_atelier.xml <<'ICON'
+          <?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              android:width="108dp" android:height="108dp"
+              android:viewportWidth="108" android:viewportHeight="108">
+            <path android:fillColor="#493348" android:pathData="M0,0h108v108h-108z"/>
+            <path android:fillColor="#E9C7A3" android:pathData="M18,20h16l20,55l20,-55h16l-27,69h-18z"/>
+            <path android:fillColor="#DCA66F" android:pathData="M14,91m-6,0a6,6 0,1 0,12 0a6,6 0,1 0,-12 0"/>
+          </vector>
+          ICON
+          sed -i 's#@mipmap/ic_launcher_round#@drawable/ic_viktoria_atelier#g; s#@mipmap/ic_launcher#@drawable/ic_viktoria_atelier#g' android/app/src/main/AndroidManifest.xml
       - name: Build APK
         run: cd android && chmod +x gradlew && ./gradlew assembleDebug --no-daemon
       - name: Upload installable APK
