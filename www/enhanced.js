@@ -68,7 +68,7 @@ function drawPage(){
 }
 function drawLessons(){
  let count=Object.keys(data.done).filter(i=>Number(i)<content.length).length;
- main.innerHTML='<div class="card"><h2>Навчальна програма «Мистецтво бачити»</h2><p>Вивчай мистецтво, дизайн і фотографію. У кожному уроці — теорія, два творчі завдання, наочні приклади та тест.</p><div class="muted">Завершено '+count+' з '+content.length+' уроків • '+Object.keys(data.taskDone).length+' творчих вправ</div><progress max="'+content.length+'" value="'+count+'"></progress></div>';
+ main.innerHTML='<div class="card"><h2>Навчальна програма «Вікторія DinLova»</h2><p>Вивчай мистецтво, дизайн і фотографію. У кожному уроці — теорія, два творчі завдання, наочні приклади та тест.</p><div class="muted">Завершено '+count+' з '+content.length+' уроків • '+Object.keys(data.taskDone).length+' творчих вправ</div><progress max="'+content.length+'" value="'+count+'"></progress></div>';
  let group="", html="";
  content.forEach((l,i)=>{
    if(group!==l[0]){if(html)html+="</div>";group=l[0];html+='<h2 class="section-title">'+esc(group)+'</h2><div class="lesson-list">'}
