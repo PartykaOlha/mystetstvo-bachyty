@@ -75,3 +75,8 @@
 .kid-quiz-options button[aria-pressed=true]{color:#fff;background:#6543af;border-color:#6543af}
 .kid-quiz-feedback{font-size:13px;line-height:1.65;color:#5b5970;min-height:24px}
 @media(max-width:610px){.kid-home-layout{grid-template-columns:1fr}.kid-home-mark{display:none}.kid-home-entry,.kid-basics,.kid-quiz{padding:17px}.kid-basic-row{grid-template-columns:1fr}.kid-timeline-hero{padding:21px}.kid-timeline-list{padding-left:19px;margin-left:9px}.kid-era-card{margin-left:-18px}.kid-era-card summary{padding:12px 10px;gap:7px}.kid-era-icon{font-size:21px;width:39px;height:39px}.kid-era-name b{font-size:14px}.kid-era-name small{font-size:11px}.kid-era-open{padding:2px 14px 17px 18px}.kid-explanation{padding:14px}.kid-story{padding:16px}}
+
+/* Five compact, accessible bottom navigation items */
+.nav{grid-template-columns:repeat(5,minmax(0,1fr));padding-left:4px;padding-right:4px}
+.nav button{font-size:clamp(10px,2.55vw,12px);padding-left:1px;padding-right:1px;min-width:0}
+@media(max-width:360px){.nav button svg{height:20px;width:20px}}
