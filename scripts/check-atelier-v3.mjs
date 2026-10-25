@@ -5,6 +5,7 @@ const read=p=>readFileSync(p,'utf8');
 const sandbox={};sandbox.window=sandbox; sandbox.history={pushState(){}};sandbox.document={getElementById:()=>({innerHTML:''})};sandbox.scrollTo=()=>{};
 createContext(sandbox);
 sandbox.ART_PHOTOS={home:()=>'',cover:()=>null,analyse:()=>'',mission:()=>''};
+sandbox.KID_ART={home:()=>'',plain:()=>'',story:()=>'',lessonEra:()=>''};
 new Script(read('www/atelier-v3.js'),{filename:'atelier-v3.js'}).runInContext(sandbox);
 const A=sandbox.ATELIER;
 assert.equal(A.modules.length,7);
