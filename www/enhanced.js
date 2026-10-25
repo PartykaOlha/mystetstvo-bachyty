@@ -69,16 +69,7 @@ function drawPage(){
  else drawLessons();
  scrollTop();
 }
-function drawLessons(){
- let count=Object.keys(data.done).filter(i=>Number(i)<content.length).length;
- main.innerHTML='<div class="card"><h2>Навчальна програма «Вікторія DinLova»</h2><p>Вивчай мистецтво, дизайн і фотографію. У кожному уроці — теорія, два творчі завдання, наочні приклади та тест.</p><div class="muted">Завершено '+count+' з '+content.length+' уроків • '+Object.keys(data.taskDone).length+' творчих вправ</div><progress max="'+content.length+'" value="'+count+'"></progress><p><button class="soft-button" onclick="artNavigate(\'library\')">Бібліотека та світові освітні практики</button></p></div>';
- let group="", html="";
- content.forEach((l,i)=>{
-   if(group!==l[0]){if(html)html+="</div>";group=l[0];html+='<h2 class="section-title">'+esc(group)+'</h2><div class="lesson-list">'}
-   html+='<button class="lesson '+(data.done[i]?"lesson-done":"")+'" onclick="lesson('+i+')"><b>'+(data.done[i]?"✓ ":"")+(i+1)+'. '+esc(l[1])+'</b><span class="lesson-meta">2 практики • 3 запитання • '+(data.quizResults[i]?.score!==undefined?"Результат "+data.quizResults[i].score+"/3 • ":"")+(data.grades[i]?"Оцінка "+data.grades[i]+"/12":"Рівень 8–10 років")+'</span></button>';
- });
- main.innerHTML+=html+"</div>";
-}
+function drawLessons(){ main.innerHTML=window.ATELIER.home(content,data); }
 function taskCard(i,k){
  const g=taskInfo(i,k);
  return '<article class="task-card"><span class="stage-tag">Завдання '+(k+1)+(data.taskDone[i+"-"+k]?" • виконано":"")+'</span><h4>'+esc(g.title)+'</h4>'+window.artExample(i,k)+'<b>Покрокова інструкція</b><ol>'+g.steps.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ol><button class="btn" onclick="openStudio('+i+','+k+')">Малювати / виконувати</button></article>';
@@ -147,25 +138,8 @@ function drawLibrary(){
  window.ART_REFERENCES.map(r=>'<div class="card"><span class="stage-tag">'+esc(r.type)+'</span> <span class="stage-tag">'+esc(r.audience)+'</span><h3>'+esc(r.title)+'</h3><p>'+esc(r.author)+'</p><p>'+esc(r.why)+'</p>'+(r.note?'<p class="muted">'+esc(r.note)+'</p>':'')+'<a href="'+esc(r.url)+'" target="_blank" rel="noopener noreferrer">Відкрити джерело</a></div>').join("")+
  '<button class="soft-button" onclick="artNavigate(\'lessons\')">Назад до навчання</button>';
 }
-function drawLesson(){
- const i=lessonId;
- if(i<0||i>=content.length)return route("lessons",-1,0,false);
- const l=content[i],g=lessonGroup(i);
- main.innerHTML='<div class="page-top"><button class="soft-button" onclick="artBack()">← Усі уроки</button><span class="pill">'+esc(l[0])+'</span></div>'+
- '<div class="card"><h2>'+(i+1)+'. '+esc(l[1])+'</h2><h3>Спостерігаємо і розуміємо</h3><p>'+esc(l[2])+'</p><div class="theory">'+g.theory.map(x=>'<p>'+esc(x)+'</p>').join("")+'</div><p class="key-idea"><b>Запам’ятай:</b> '+esc(g.remember)+'</p><p class="muted"><b>Завдання для уважного погляду:</b> розглянь приклад нижче. Що ти помічаєш? Чому думаєш саме так? Яке запитання виникло?</p></div>'+
- ((i===5||i===20)?colorLab():"")+
- '<h3 class="section-title">Творча практика: 2 завдання</h3><p class="muted">Приклади — підказки, а не зразки, які треба точно копіювати. Можна вигадати власні форми й кольори.</p>'+
- '<div class="task-grid">'+taskCard(i,0)+taskCard(i,1)+'</div>'+
- '<div id="quizHolder">'+quizHtml(i)+'</div>'+
- '<div class="card"><h3>Мій погляд на роботу</h3><label for="lessonReflection">'+esc(window.ART_REFLECTION_PROMPTS[i])+'</label><textarea id="lessonReflection" rows="3" maxlength="2000" style="width:100%" placeholder="Можна написати коротко або обговорити з дорослими.">'+esc(data.reflections[i]||"")+'</textarea><button class="btn" onclick="artSaveReflection('+i+')">Зберегти мої думки</button><p class="status" id="reflectionStatus"></p></div>'+
- '<div class="card">'+lessonSources(i)+'</div>'+
- '<div class="card"><button class="btn" onclick="complete('+i+')">Завершити урок</button><button class="action alt" onclick="artBack()">До всіх уроків</button></div>';
-}
-
-function drawGallery(){
- main.innerHTML='<div class="page-top"><h2>Галерея робіт</h2><button class="soft-button" onclick="artNavigate(\'lessons\')">До уроків</button></div>'+
- (data.works.length?'<div class="gallery-grid">'+data.works.map((w,i)=>'<div class="card"><h3>'+esc(w.name)+'</h3><img class="work" alt="Збережена творча робота" src="'+w.image+'"><p class="muted">'+esc(w.date)+'</p><button class="action alt" onclick="downloadWork('+i+')">Зберегти JPG</button></div>').join("")+'</div>':'<div class="card">Наразі тут порожньо. Створи перший малюнок і натисни «У галерею».</div>');
-}
+function drawLesson(){ if(lessonId<0||lessonId>=content.length)return route('lessons',-1,0,false); main.innerHTML=window.ATELIER.lesson(lessonId,content,data,lessonGroup(lessonId),quizHtml,taskCard,lessonSources,colorLab); }
+function drawGallery(){ main.innerHTML=window.ATELIER.gallery(data,esc); }
 function drawParent(){
  let n=Object.keys(data.done).length, completed=Object.entries(data.quizResults).filter(([i,r])=>(r.answers||[]).length===3&&(r.answers||[]).every(Number.isInteger)), quizCount=completed.length, correct=completed.reduce((a,[i,r])=>a+Number(r.score||0),0),avg=quizCount?correct/(quizCount*3)*100:0;
  main.innerHTML='<div class="page-top"><h2>Батьківський кабінет</h2><button class="soft-button" onclick="artNavigate(\'lessons\')">До уроків</button></div>'+
@@ -197,7 +171,7 @@ function drawStudio(){
  '<aside class="card studio-guide"><details class="guide-details" open><summary>Підказка до завдання ▾</summary>'+(task?'<div class="guide-header">Завдання '+(taskId+1)+': '+esc(task.title)+'</div>'+window.artExample(lessonId,taskId)+'<b>Роби по черзі:</b><ol>'+task.steps.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ol>':'<p>Обери тему самостійно або повернися до уроків, щоб отримати приклад і кроки.</p>')+'</details></aside></div>';
  initPaint();
 }
-window.artExitStudio=()=>lessonId>=0?route("lesson",lessonId,taskId):route("lessons",-1,0);
+window.artExitStudio=()=>{ if(lessonId>=0){route('lesson',lessonId,taskId);window.ATELIER.show('make');}else route('lessons',-1,0); };
 window.artTool=t=>{brush=t;updateTools()};
 window.artWidth=v=>{brushSize=Number(v);document.getElementById("widthValue").textContent=v};
 window.artPressure=v=>{usePressure=v};

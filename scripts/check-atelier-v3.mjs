@@ -1,0 +1,30 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {createContext,Script} from 'node:vm';
+const read=p=>readFileSync(p,'utf8');
+const sandbox={};sandbox.window=sandbox; sandbox.history={pushState(){}};sandbox.document={getElementById:()=>({innerHTML:''})};sandbox.scrollTo=()=>{};
+createContext(sandbox);
+new Script(read('www/atelier-v3.js'),{filename:'atelier-v3.js'}).runInContext(sandbox);
+const A=sandbox.ATELIER;
+assert.equal(A.modules.length,7);
+const sections=A.modules.map(x=>x[0]);
+const content=Array.from({length:28},(_,i)=>[sections[i<4?0:i<8?1:i<12?2:i<16?3:i<22?4:i<26?5:6],'Навчальний приклад '+i]);
+const data={done:{},taskDone:{},works:[],reflections:{}};
+const homepage=A.home(content,data);
+assert.ok(homepage.includes('Навчися'));
+assert.ok(homepage.includes('v3-module-art'));
+assert.ok(homepage.includes('Майстерні мистецтва'));
+assert.ok((homepage.match(/class="v3-module"/g)||[]).length===7);
+const guides={theory:['Пояснення 1','Пояснення 2'],remember:'Головна думка'};
+sandbox.artExample=(i,k)=>'<svg></svg>';sandbox.ART_REFLECTION_PROMPTS=Array(28).fill('Що нового ти помічаєш?');
+const page=A.lesson(5,content,data,guides,()=>'<div>Три запитання</div>',()=>'<button>Малювати</button>',()=>'<p>Джерела</p>',()=>'<div>Лабораторія кольору</div>');
+for(const word of ['v3-steps-nav','Дивись','Досліджуй','Створи','Перевір','Лабораторія кольору','lessonReflection']){
+ assert.ok(page.includes(word),word+' is missing from lesson');
+}
+const html=read('www/index.html');
+assert.ok(html.includes('atelier-v3.js'));
+assert.ok(html.includes('atelier-v3.css'));
+const conf=JSON.parse(read('capacitor.config.json'));
+assert.equal(conf.appId,'ua.partyka.viktoriadinlova.atelier');
+new Script(read('www/enhanced.js'),{filename:'enhanced.js'});
+console.log('Atelier V3 checks passed: 7 visual modules, 4 lesson stages, color lab, separate Android package.');
