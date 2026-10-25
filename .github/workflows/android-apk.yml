@@ -27,6 +27,8 @@ jobs:
           test -n "$SDKMANAGER" || { echo "Android sdkmanager missing"; exit 1; }
           yes | "$SDKMANAGER" --sdk_root="$ANDROID_HOME" --licenses > /dev/null || true
           "$SDKMANAGER" --sdk_root="$ANDROID_HOME" "platforms;android-35" "build-tools;35.0.0" "platform-tools"
+      - name: Validate scripts and all creative exercises
+        run: node scripts/check-app.mjs
       - name: Install dependencies
         run: npm install --no-audit --no-fund
       - name: Create Android project
@@ -41,6 +43,11 @@ jobs:
           name: mystetstvo-bachyty-samsung
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
+      - name: Upload source snapshot for QA
+        uses: actions/upload-artifact@v4
+        with:
+          name: mystetstvo-app-source
+          path: www/
       - name: Publish APK for direct download
         env:
           GH_TOKEN: ${{ github.token }}
