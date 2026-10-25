@@ -65,6 +65,7 @@ function home(content,data){
  modules.forEach((m,k)=>{const group=moduleIds(content,k),n=group.filter(i=>data.done[i]).length;
  html+='<button class="v3-module" onclick="ATELIER.openUnit('+k+')"><div class="v3-module-art">'+(window.ART_PHOTOS.cover(k)?'<img class="v5-module-image" src="'+window.ART_PHOTOS.cover(k).file+'" alt="'+esc(window.ART_PHOTOS.cover(k).title)+'">':'')+'<span class="v5-module-label">'+m[2]+'</span><span class="v5-module-color-ribbon"></span></div><div class="v3-module-meta"><span class="v3-eyebrow">'+m[2]+' · '+group.length+' уроків</span><strong>'+m[1]+'</strong><span class="muted">'+n+' із '+group.length+' завершено</span><div class="v3-module-bottom"><div class="v3-mini-progress"><i style="width:'+Math.round(100*n/group.length)+'%"></i></div><span class="v3-module-arrow">↗</span></div></div></button>'});
  html+='</div><section class="v3-journey"><div><span class="v3-eyebrow">Твоя творча подорож</span><h3>Дивись. Думай. Створюй. Покращуй.</h3><p>У мистецтві немає лише одного правильного малюнка. Важливі уважне спостереження, власні ідеї та сміливість експериментувати.</p></div><button class="soft-button" onclick="openStudio(-1,0)">Вільне малювання ↗</button></section>';
+ html+=window.KID_ART.home();
  html+=window.ART_PHOTOS.home();
  return html;
 }
