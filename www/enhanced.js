@@ -10,6 +10,8 @@ const guides = [...window.ART_GUIDES, ...window.ART_EXTRA_GUIDES];
 data.taskDone = data.taskDone || {};
 data.quizResults = data.quizResults || {};
 data.reflections = data.reflections || {};
+data.deepChecks = data.deepChecks || {};
+data.deepJournal = data.deepJournal || {};
 const main = document.getElementById("app"), nav = document.querySelector(".nav");
 const icons = {
   lessons:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5.5C6 3.7 9.3 4.3 12 6c2.7-1.7 6-2.3 9-.5v13c-3-1.8-6.3-1.2-9 .5-2.7-1.7-6-2.3-9-.5zM12 6v13"/></svg>',
@@ -138,7 +140,7 @@ function drawLibrary(){
  window.ART_REFERENCES.map(r=>'<div class="card"><span class="stage-tag">'+esc(r.type)+'</span> <span class="stage-tag">'+esc(r.audience)+'</span><h3>'+esc(r.title)+'</h3><p>'+esc(r.author)+'</p><p>'+esc(r.why)+'</p>'+(r.note?'<p class="muted">'+esc(r.note)+'</p>':'')+'<a href="'+esc(r.url)+'" target="_blank" rel="noopener noreferrer">Відкрити джерело</a></div>').join("")+
  '<button class="soft-button" onclick="artNavigate(\'lessons\')">Назад до навчання</button>';
 }
-function drawLesson(){ if(lessonId<0||lessonId>=content.length)return route('lessons',-1,0,false); main.innerHTML=window.ATELIER.lesson(lessonId,content,data,lessonGroup(lessonId),quizHtml,taskCard,lessonSources,colorLab); }
+function drawLesson(){ if(lessonId<0||lessonId>=content.length)return route('lessons',-1,0,false); main.innerHTML=window.ATELIER.lesson(lessonId,content,data,lessonGroup(lessonId),quizHtml,taskCard,lessonSources,colorLab,save); }
 function drawGallery(){ main.innerHTML=window.ATELIER.gallery(data,esc); }
 function drawParent(){
  let n=Object.keys(data.done).length, completed=Object.entries(data.quizResults).filter(([i,r])=>(r.answers||[]).length===3&&(r.answers||[]).every(Number.isInteger)), quizCount=completed.length, correct=completed.reduce((a,[i,r])=>a+Number(r.score||0),0),avg=quizCount?correct/(quizCount*3)*100:0;
