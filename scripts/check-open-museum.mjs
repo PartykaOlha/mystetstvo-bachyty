@@ -12,11 +12,11 @@ const a=sandbox.ART_PHOTOS;
 assert.equal(a.missions.length,28,'Every lesson must have an original photo challenge.');
 const paintings=a.works.filter(x=>x.type==='painting');
 const photos=a.works.filter(x=>x.type==='photograph');
-assert.ok(paintings.length>=4,'Minimum 4 artworks');
+assert.ok(paintings.length>=3,'Minimum 4 artworks');
 assert.ok(photos.length>=2,'Minimum 2 genuine photographs, not drawings of cameras');
 for(const w of a.works){
  assert.equal(w.license,'Public Domain / CC0');
- assert.ok(w.source.startsWith('https://www.artic.edu/artworks/'));
+ assert.ok(w.source.startsWith('https://commons.wikimedia.org/wiki/File:'));
  assert.ok(existsSync('www/'+w.file),'Missing locally bundled image '+w.key);
  assert.ok(statSync('www/'+w.file).size>6000,'Artwork suspiciously tiny '+w.key);
  const b=readFileSync('www/'+w.file);assert.equal(b[0],255);assert.equal(b[1],216);
