@@ -1,5 +1,6 @@
 import {mkdir,writeFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
+import {spawnSync} from 'node:child_process';
 import {setTimeout as pause} from 'node:timers/promises';
 /** All files below have individually reviewed Wikimedia Commons pages declaring them public domain.
  * Capture and reuse of two-dimensional public-domain works follows Commons PD-Art policies.
@@ -40,6 +41,8 @@ for(const x of files){
   try{body=await take(url);break}catch(e){reason=String(e);await pause(450)}
  }
  if(!body){console.warn('MISSING',x.key,reason);continue}
+ const shrunk=spawnSync('ffmpeg',['-hide_banner','-loglevel','error','-f','image2pipe','-i','pipe:0','-vf','scale=if(gt(iw,860),860,iw):-2','-q:v','5','-frames:v','1','-f','image2','pipe:1'],{input:body,maxBuffer:16*1024*1024});
+ if(shrunk.status===0&&shrunk.stdout.length>6500&&shrunk.stdout.length<body.length&&shrunk.stdout[0]===255&&shrunk.stdout[1]===216)body=shrunk.stdout;
  await writeFile('www/media/open-art/'+x.key+'.jpg',body);
  const source='https://commons.wikimedia.org/wiki/File:'+encodeURIComponent(x.file.replaceAll(' ','_'));
  works.push({key:x.key,file:'media/open-art/'+x.key+'.jpg',title:x.title,artist:x.artist,type:x.type,source,museum:x.museum,license:'Public Domain / CC0',bytes:body.length});
