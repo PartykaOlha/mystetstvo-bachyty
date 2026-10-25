@@ -8,6 +8,8 @@ if (!window.ART_GUIDES || !window.artExample || !window.ART_EXTRA_LESSONS) {
 content.push(...window.ART_EXTRA_LESSONS);
 const guides = [...window.ART_GUIDES, ...window.ART_EXTRA_GUIDES];
 data.taskDone = data.taskDone || {};
+data.quizResults = data.quizResults || {};
+data.reflections = data.reflections || {};
 const main = document.getElementById("app"), nav = document.querySelector(".nav");
 const icons = {
   lessons:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5.5C6 3.7 9.3 4.3 12 6c2.7-1.7 6-2.3 9-.5v13c-3-1.8-6.3-1.2-9 .5-2.7-1.7-6-2.3-9-.5zM12 6v13"/></svg>',
@@ -56,9 +58,10 @@ window.addEventListener("keydown",e=>{
 function scrollTop(){window.scrollTo({top:0,behavior:"instant"})}
 function drawPage(){
  nav.querySelectorAll("button").forEach(b=>b.classList.remove("active"));
- const selected=page==="lesson"?"lessons":page;
+ const selected=(page==="lesson"||page==="library")?"lessons":page;
  document.getElementById("nav-"+selected)?.classList.add("active");
  if(page==="lessons")drawLessons();
+ else if(page==="library")drawLibrary();
  else if(page==="lesson")drawLesson();
  else if(page==="studio")drawStudio();
  else if(page==="gallery")drawGallery();
@@ -68,11 +71,11 @@ function drawPage(){
 }
 function drawLessons(){
  let count=Object.keys(data.done).filter(i=>Number(i)<content.length).length;
- main.innerHTML='<div class="card"><h2>Навчальна програма «Вікторія DinLova»</h2><p>Вивчай мистецтво, дизайн і фотографію. У кожному уроці — теорія, два творчі завдання, наочні приклади та тест.</p><div class="muted">Завершено '+count+' з '+content.length+' уроків • '+Object.keys(data.taskDone).length+' творчих вправ</div><progress max="'+content.length+'" value="'+count+'"></progress></div>';
+ main.innerHTML='<div class="card"><h2>Навчальна програма «Вікторія DinLova»</h2><p>Вивчай мистецтво, дизайн і фотографію. У кожному уроці — теорія, два творчі завдання, наочні приклади та тест.</p><div class="muted">Завершено '+count+' з '+content.length+' уроків • '+Object.keys(data.taskDone).length+' творчих вправ</div><progress max="'+content.length+'" value="'+count+'"></progress><p><button class="soft-button" onclick="artNavigate(\'library\')">Бібліотека та світові освітні практики</button></p></div>';
  let group="", html="";
  content.forEach((l,i)=>{
    if(group!==l[0]){if(html)html+="</div>";group=l[0];html+='<h2 class="section-title">'+esc(group)+'</h2><div class="lesson-list">'}
-   html+='<button class="lesson '+(data.done[i]?"lesson-done":"")+'" onclick="lesson('+i+')"><b>'+(data.done[i]?"✓ ":"")+(i+1)+'. '+esc(l[1])+'</b><span class="lesson-meta">2 практики • '+(data.tests[i]!==undefined?"Тест "+data.tests[i]+"/1 • ":"")+(data.grades[i]?"Оцінка "+data.grades[i]+"/12":"Рівень 8–10 років")+'</span></button>';
+   html+='<button class="lesson '+(data.done[i]?"lesson-done":"")+'" onclick="lesson('+i+')"><b>'+(data.done[i]?"✓ ":"")+(i+1)+'. '+esc(l[1])+'</b><span class="lesson-meta">2 практики • 3 запитання • '+(data.quizResults[i]?.score!==undefined?"Результат "+data.quizResults[i].score+"/3 • ":"")+(data.grades[i]?"Оцінка "+data.grades[i]+"/12":"Рівень 8–10 років")+'</span></button>';
  });
  main.innerHTML+=html+"</div>";
 }
@@ -80,16 +83,85 @@ function taskCard(i,k){
  const g=taskInfo(i,k);
  return '<article class="task-card"><span class="stage-tag">Завдання '+(k+1)+(data.taskDone[i+"-"+k]?" • виконано":"")+'</span><h4>'+esc(g.title)+'</h4>'+window.artExample(i,k)+'<b>Покрокова інструкція</b><ol>'+g.steps.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ol><button class="btn" onclick="openStudio('+i+','+k+')">Малювати / виконувати</button></article>';
 }
+
+function scoreFor(i){
+ const q=window.ART_QUIZ_BANK[i]||[];
+ const r=data.quizResults[i];
+ if(!r)return null;
+ return (r.answers||[]).reduce((a,v,k)=>a+(Number.isInteger(v)&&q[k]&&v===q[k][2]?1:0),0);
+}
+function quizHtml(i){
+ const qs=window.ART_QUIZ_BANK[i]||[];
+ const r=data.quizResults[i]||{answers:[]};
+ const a=r.answers||[];
+ const finished=qs.length>0&&qs.every((q,k)=>Number.isInteger(a[k]));
+ return '<div class="card"><h3>Перевір розуміння — 3 запитання</h3><p class="muted">Потрібно не просто згадати слово, а застосувати знання. Після вибору відповіді відкривається пояснення; помилки — частина навчання.</p>'+
+ qs.map((q,k)=>{
+  const chosen=a[k], answered=Number.isInteger(chosen);
+  return '<div class="quiz-question"><div class="quiz-num">Питання '+(k+1)+' з '+qs.length+'</div><h4>'+esc(q[0])+'</h4><div class="quiz-options">'+q[1].map((option,j)=>'<button type="button" '+(answered?'disabled':'')+' class="quiz-option '+(answered?(j===q[2]?'correct-option':j===chosen?'incorrect-option':''):'')+'" onclick="artSelectQuiz('+i+','+k+','+j+')">'+esc(option)+'</button>').join("")+'</div>'+
+ (answered?'<div class="quiz-feedback '+(chosen===q[2]?"is-correct":"is-incorrect")+'"><b>'+(chosen===q[2]?"Правильно.":"Розберімо відповідь.")+'</b> '+esc(q[3])+'</div>':'')+'</div>';
+ }).join("")+
+ '<p class="quiz-result">'+(finished?"Результат: "+scoreFor(i)+" з "+qs.length+". "+(scoreFor(i)===3?"Усі завдання виконано!":"За бажанням перечитай пояснення та спробуй ще раз."):(a.filter(Number.isInteger).length+" з "+qs.length+" відповідей"))+'</p>'+
+ '<button class="action alt" type="button" onclick="artRetryQuiz('+i+')">Спробувати тест ще раз</button></div>';
+}
+window.artSelectQuiz=function(i,k,j){
+ const q=window.ART_QUIZ_BANK[i];if(!q||!q[k]||j<0||j>=4)return;
+ const state=data.quizResults[i]||{answers:Array(q.length).fill(null),best:0,attempts:1};
+ if(Number.isInteger(state.answers[k]))return;
+ state.answers[k]=j;state.score=state.answers.reduce((a,v,n)=>a+(Number.isInteger(v)&&v===q[n][2]?1:0),0);
+ state.best=Math.max(state.best||0,state.score);
+ data.quizResults[i]=state;save();
+ const holder=document.getElementById("quizHolder");if(holder)holder.innerHTML=quizHtml(i);
+};
+window.artRetryQuiz=function(i){
+ if(!confirm("Повторити всі три запитання цього уроку? Найкращий попередній результат залишиться."))return;
+ const old=data.quizResults[i]||{best:0,attempts:0};
+ data.quizResults[i]={answers:Array(3).fill(null),best:Math.max(old.best||0,old.score||0),attempts:(old.attempts||1)+1};
+ save();const holder=document.getElementById("quizHolder");if(holder)holder.innerHTML=quizHtml(i);
+};
+window.artSaveReflection=function(i){
+ const note=document.getElementById("lessonReflection");
+ if(!note)return;
+ data.reflections[i]=note.value.trim().slice(0,2000);
+ save();const status=document.getElementById("reflectionStatus");if(status)status.textContent="Міркування збережено.";
+};
+const refsFor=i=>(window.ART_LESSON_REFERENCES[i]||[]).map(id=>window.ART_REFERENCES.find(r=>r.id===id)).filter(Boolean);
+function lessonSources(i){
+ return '<details class="reading-resources"><summary>Джерела для теми та додаткове читання</summary><p class="muted">Оригінальні методичні матеріали та перевірені книги. Для відкриття посилань потрібен інтернет. Це авторський курс, не сертифікований Cambridge чи IB.</p>'+
+ refsFor(i).map(r=>'<div class="reading-item"><b>'+esc(r.title)+'</b><span class="muted">'+esc(r.author)+' • '+esc(r.audience)+'</span><p>'+esc(r.why)+'</p><a href="'+esc(r.url)+'" target="_blank" rel="noopener noreferrer">Офіційне джерело</a></div>').join("")+
+ '<p><button class="soft-button" onclick="artNavigate(\'library\')">Уся бібліотека</button></p></details>';
+}
+function colorLab(){
+ return '<div class="card"><h3>Інтерактивна лабораторія кольору</h3><p>Два однакові квадрати можуть виглядати по-різному на різному тлі. Зміни колір квадрата й обидва фони, але залиш квадрати однаковими. Що помітиш?</p><div class="color-controls"><label>Колір обох квадратів <input id="swatchInk" type="color" value="#9f85aa" oninput="artColorChange()"></label><label>Лівий фон <input id="swatchBackA" type="color" value="#313348" oninput="artColorChange()"></label><label>Правий фон <input id="swatchBackB" type="color" value="#f0e0c8" oninput="artColorChange()"></label></div><div class="color-experiment"><div id="colorLabLeft" style="background:#313348"><span class="color-same" style="background:#9f85aa"></span></div><div id="colorLabRight" style="background:#f0e0c8"><span class="color-same" style="background:#9f85aa"></span></div></div><p class="muted">Підказка: сприйняття кольору залежить від навколишніх відтінків. Це навчальний дослід за мотивами колірних експериментів Йозефа Альберса. Зразки відображає екран, тому результат може дещо відрізнятися на інших дисплеях.</p></div>';
+}
+window.artColorChange=function(){
+ const ink=document.getElementById("swatchInk")?.value, a=document.getElementById("swatchBackA")?.value,b=document.getElementById("swatchBackB")?.value;
+ if(!ink||!a||!b)return;
+ document.querySelectorAll(".color-same").forEach(el=>el.style.background=ink);
+ document.getElementById("colorLabLeft").style.background=a;
+ document.getElementById("colorLabRight").style.background=b;
+};
+function drawLibrary(){
+ main.innerHTML='<div class="page-top"><button class="soft-button" onclick="artBack()">← До уроків</button><h2>Бібліотека</h2></div>'+
+ '<div class="card"><h3>Як побудовано навчання</h3><p>Авторський курс використовує дослідницький цикл: уважно подивитися, висловити гіпотезу, створити власний результат, отримати пояснення, оцінити й поліпшити роботу. Орієнтири — Cambridge Primary Art & Design, IB PYP, музейна педагогіка Getty/NGA, Harvard Project Zero та National Visual Arts Standards.</p><p><b>Важливо:</b> жодна зі згаданих установ не сертифікувала й не схвалювала цей застосунок. Посилання ведуть на офіційні сторінки, а зміст уроків та тестів — авторський.</p></div>'+
+ window.ART_REFERENCES.map(r=>'<div class="card"><span class="stage-tag">'+esc(r.type)+'</span> <span class="stage-tag">'+esc(r.audience)+'</span><h3>'+esc(r.title)+'</h3><p>'+esc(r.author)+'</p><p>'+esc(r.why)+'</p>'+(r.note?'<p class="muted">'+esc(r.note)+'</p>':'')+'<a href="'+esc(r.url)+'" target="_blank" rel="noopener noreferrer">Відкрити джерело</a></div>').join("")+
+ '<button class="soft-button" onclick="artNavigate(\'lessons\')">Назад до навчання</button>';
+}
 function drawLesson(){
  const i=lessonId;
  if(i<0||i>=content.length)return route("lessons",-1,0,false);
  const l=content[i],g=lessonGroup(i);
  main.innerHTML='<div class="page-top"><button class="soft-button" onclick="artBack()">← Усі уроки</button><span class="pill">'+esc(l[0])+'</span></div>'+
- '<div class="card"><h2>'+(i+1)+'. '+esc(l[1])+'</h2><h3>Пояснення</h3><p>'+esc(l[2])+'</p><div class="theory">'+g.theory.map(x=>'<p>'+esc(x)+'</p>').join("")+'</div><p class="key-idea"><b>Запам’ятай:</b> '+esc(g.remember)+'</p></div>'+
+ '<div class="card"><h2>'+(i+1)+'. '+esc(l[1])+'</h2><h3>Спостерігаємо і розуміємо</h3><p>'+esc(l[2])+'</p><div class="theory">'+g.theory.map(x=>'<p>'+esc(x)+'</p>').join("")+'</div><p class="key-idea"><b>Запам’ятай:</b> '+esc(g.remember)+'</p><p class="muted"><b>Завдання для уважного погляду:</b> розглянь приклад нижче. Що ти помічаєш? Чому думаєш саме так? Яке запитання виникло?</p></div>'+
+ ((i===5||i===20)?colorLab():"")+
  '<h3 class="section-title">Творча практика: 2 завдання</h3><p class="muted">Приклади — підказки, а не зразки, які треба точно копіювати. Можна вигадати власні форми й кольори.</p>'+
  '<div class="task-grid">'+taskCard(i,0)+taskCard(i,1)+'</div>'+
- '<div class="card"><h3 class="exam-title">Перевір себе</h3><p>'+esc(l[4])+'</p><div class="answers">'+l[5].map((a,j)=>'<button id="answer'+j+'" onclick="answer('+i+','+j+')">'+esc(a)+'</button>').join("")+'</div><p id="feedback">'+(data.tests[i]===1?"Тест пройдено.":"")+'</p><button class="btn" onclick="complete('+i+')">Завершити урок</button><button class="action alt" onclick="artBack()">До всіх уроків</button></div>';
+ '<div id="quizHolder">'+quizHtml(i)+'</div>'+
+ '<div class="card"><h3>Мій погляд на роботу</h3><label for="lessonReflection">'+esc(window.ART_REFLECTION_PROMPTS[i])+'</label><textarea id="lessonReflection" rows="3" maxlength="2000" style="width:100%" placeholder="Можна написати коротко або обговорити з дорослими.">'+esc(data.reflections[i]||"")+'</textarea><button class="btn" onclick="artSaveReflection('+i+')">Зберегти мої думки</button><p class="status" id="reflectionStatus"></p></div>'+
+ '<div class="card">'+lessonSources(i)+'</div>'+
+ '<div class="card"><button class="btn" onclick="complete('+i+')">Завершити урок</button><button class="action alt" onclick="artBack()">До всіх уроків</button></div>';
 }
+
 function drawGallery(){
  main.innerHTML='<div class="page-top"><h2>Галерея робіт</h2><button class="soft-button" onclick="artNavigate(\'lessons\')">До уроків</button></div>'+
  (data.works.length?'<div class="gallery-grid">'+data.works.map((w,i)=>'<div class="card"><h3>'+esc(w.name)+'</h3><img class="work" alt="Збережена творча робота" src="'+w.image+'"><p class="muted">'+esc(w.date)+'</p><button class="action alt" onclick="downloadWork('+i+')">Зберегти JPG</button></div>').join("")+'</div>':'<div class="card">Наразі тут порожньо. Створи перший малюнок і натисни «У галерею».</div>');
