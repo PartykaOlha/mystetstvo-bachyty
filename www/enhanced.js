@@ -97,8 +97,8 @@ function quizHtml(i){
  const finished=qs.length>0&&qs.every((q,k)=>Number.isInteger(a[k]));
  return '<div class="card"><h3>Перевір розуміння — 3 запитання</h3><p class="muted">Потрібно не просто згадати слово, а застосувати знання. Після вибору відповіді відкривається пояснення; помилки — частина навчання.</p>'+
  qs.map((q,k)=>{
-  const chosen=a[k], answered=Number.isInteger(chosen);
-  return '<div class="quiz-question"><div class="quiz-num">Питання '+(k+1)+' з '+qs.length+'</div><h4>'+esc(q[0])+'</h4><div class="quiz-options">'+q[1].map((option,j)=>'<button type="button" '+(answered?'disabled':'')+' class="quiz-option '+(answered?(j===q[2]?'correct-option':j===chosen?'incorrect-option':''):'')+'" onclick="artSelectQuiz('+i+','+k+','+j+')">'+esc(option)+'</button>').join("")+'</div>'+
+  const chosen=a[k], answered=Number.isInteger(chosen), order=[0,1,2,3].map((_,u)=>(u+(i*3+k*7)%4)%4);
+  return '<div class="quiz-question"><div class="quiz-num">Питання '+(k+1)+' з '+qs.length+'</div><h4>'+esc(q[0])+'</h4><div class="quiz-options">'+order.map(j=>'<button type="button" '+(answered?'disabled':'')+' class="quiz-option '+(answered?(j===q[2]?'correct-option':j===chosen?'incorrect-option':''):'')+'" onclick="artSelectQuiz('+i+','+k+','+j+')">'+esc(q[1][j])+'</button>').join("")+'</div>'+
  (answered?'<div class="quiz-feedback '+(chosen===q[2]?"is-correct":"is-incorrect")+'"><b>'+(chosen===q[2]?"Правильно.":"Розберімо відповідь.")+'</b> '+esc(q[3])+'</div>':'')+'</div>';
  }).join("")+
  '<p class="quiz-result">'+(finished?"Результат: "+scoreFor(i)+" з "+qs.length+". "+(scoreFor(i)===3?"Усі завдання виконано!":"За бажанням перечитай пояснення та спробуй ще раз."):(a.filter(Number.isInteger).length+" з "+qs.length+" відповідей"))+'</p>'+
