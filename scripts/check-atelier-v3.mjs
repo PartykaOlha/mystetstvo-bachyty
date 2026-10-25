@@ -17,8 +17,9 @@ assert.ok(homepage.includes('Майстерні мистецтва'));
 assert.ok((homepage.match(/class="v3-module"/g)||[]).length===7);
 const guides={theory:['Пояснення 1','Пояснення 2'],remember:'Головна думка'};
 sandbox.artExample=(i,k)=>'<svg></svg>';sandbox.ART_REFLECTION_PROMPTS=Array(28).fill('Що нового ти помічаєш?');
+for(const path of ['www/deep-lessons-a.js','www/deep-lessons-b.js','www/deep-lessons-c.js','www/deep-lessons-ui.js']) new Script(read(path),{filename:path}).runInContext(sandbox);
 const page=A.lesson(5,content,data,guides,()=>'<div>Три запитання</div>',()=>'<button>Малювати</button>',()=>'<p>Джерела</p>',()=>'<div>Лабораторія кольору</div>');
-for(const word of ['v3-steps-nav','Дивись','Досліджуй','Створи','Перевір','Лабораторія кольору','lessonReflection']){
+for(const word of ['v3-steps-nav','Теорія','Аналіз','Практика','Підсумок','Лабораторія кольору','lessonReflection','Поглиблена теорія']){
  assert.ok(page.includes(word),word+' is missing from lesson');
 }
 const html=read('www/index.html');
