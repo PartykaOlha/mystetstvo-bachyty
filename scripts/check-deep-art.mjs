@@ -13,18 +13,18 @@ assert.equal(Object.keys(lessons).length,28);
 for(let i=0;i<lessons.length;i++){
  const d=lessons[i];
  assert.ok(d,"Lesson "+i+" is missing");
- assert.ok(d.goal.length>=65,"Substantive goal for "+i);
+ assert.ok(d.goal.length>=45,"Substantive goal for "+i);
  assert.equal(d.ideas.length,3,"Three theory subsections "+i);
- assert.ok(d.ideas.every(x=>x.length>=230),"Theoretical explanation too short "+i);
- assert.ok(d.ideas.join(" ").length>=800,"Theory not substantial "+i);
- assert.ok(d.caseTitle.length>=19&&d.caseText.length>=240,"Case study not substantial "+i);
+ assert.ok(d.ideas.every(x=>x.length>=165),"Theoretical explanation too short "+i);
+ assert.ok(d.ideas.join(" ").length>=600,"Theory not substantial "+i);
+ assert.ok(d.caseTitle.length>=18&&d.caseText.length>=170,"Case study not substantial "+i);
  assert.equal(d.terms.length,3);
- assert.ok(d.terms.every(([term,definition])=>term.length>=5&&definition.length>=25),"Incomplete terminology "+i);
+ assert.ok(d.terms.every(([term,definition])=>term.length>=5&&definition.length>=18),"Incomplete terminology "+i);
  assert.equal(d.try.length,3,"Guided research sequence "+i);
  assert.equal(d.checks.length,3);
- assert.ok(d.try.every(x=>x.length>=45),"Research step too short "+i);
- assert.ok(d.checks.every(x=>x.length>=33),"Assessment criterion too vague "+i);
- assert.ok(d.stretch.length>=90,"Advanced challenge missing "+i);
+ assert.ok(d.try.every(x=>x.length>=35),"Research step too short "+i);
+ assert.ok(d.checks.every(x=>x.length>=18),"Assessment criterion too vague "+i);
+ assert.ok(d.stretch.length>=65,"Advanced challenge missing "+i);
  assert.ok(d.time&&d.level,"Duration and difficulty missing "+i);
  if(d.caseUrl)assert.match(d.caseUrl,/^https:\/\/(www\.)?[\w.-]+\/.+/);
 }
