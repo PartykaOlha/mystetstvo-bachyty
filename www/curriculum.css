@@ -1,0 +1,27 @@
+
+.quiz-question{border-top:1px solid #e7dfef;padding:14px 0 16px}
+.quiz-question h4{font-size:16px;line-height:1.45;margin:8px 0 12px}
+.quiz-num{font-size:12px;font-weight:700;color:#63558f;text-transform:uppercase;letter-spacing:.02em}
+.quiz-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:8px}
+.quiz-option{width:100%;min-height:52px;background:#f8f7fc;border:1.5px solid #dbd5eb;border-radius:12px;padding:12px 13px;text-align:left;line-height:1.35;font-size:14px;color:#28243d;cursor:pointer}
+.quiz-option:not(:disabled):active{background:#e8e0f8}
+.quiz-option.correct-option{background:#e3f3e9;border-color:#55a478;color:#245437;opacity:1}
+.quiz-option.incorrect-option{background:#fcebed;border-color:#d68b97;color:#733c46;opacity:1}
+.quiz-option:disabled{opacity:.72;cursor:default}
+.quiz-feedback{font-size:14px;padding:12px 14px;border-radius:11px;line-height:1.5;margin-top:10px}
+.quiz-feedback.is-correct{background:#ebf6ed;color:#2f5a3b}
+.quiz-feedback.is-incorrect{background:#fff0ef;color:#7a3b3c}
+.quiz-result{font-weight:700;padding:12px;background:#f5f1fc;border-radius:11px}
+.reading-resources summary{font-weight:700;cursor:pointer;min-height:40px}
+.reading-resources[open] summary{margin-bottom:12px}
+.reading-item{padding:10px 0;border-top:1px solid #e9e3f1}
+.reading-item b,.reading-item span{display:block}
+.reading-item a,.card>a,.reading-resources a{color:#544396;text-decoration:underline;text-underline-offset:3px;font-weight:600}
+.reading-item p{margin:7px 0}
+.color-controls{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+.color-controls label{display:flex;align-items:center;gap:8px;padding:6px 8px;background:#faf7ff;border:1px solid #e7e2ef;border-radius:9px;font-size:13px}
+.color-controls input{width:44px;height:39px;padding:2px;cursor:pointer}
+.color-experiment{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:15px 0}
+.color-experiment>div{height:155px;display:flex;align-items:center;justify-content:center;border-radius:14px;border:1px solid #d7d2e1}
+.color-experiment .color-same{display:block;width:72px;height:72px;box-shadow:0 1px 2px #0003}
+@media(max-width:550px){.quiz-options{grid-template-columns:1fr}.color-experiment>div{height:120px}.color-experiment .color-same{width:56px;height:56px}}
