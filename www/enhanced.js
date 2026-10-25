@@ -12,15 +12,17 @@ data.quizResults = data.quizResults || {};
 data.reflections = data.reflections || {};
 data.deepChecks = data.deepChecks || {};
 data.deepJournal = data.deepJournal || {};
+if(window.KID_ART)window.KID_ART.bind(data,save);
 if(window.ART_PHOTOS)window.ART_PHOTOS.bind(data,save);
 const main = document.getElementById("app"), nav = document.querySelector(".nav");
 const icons = {
   lessons:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5.5C6 3.7 9.3 4.3 12 6c2.7-1.7 6-2.3 9-.5v13c-3-1.8-6.3-1.2-9 .5-2.7-1.7-6-2.3-9-.5zM12 6v13"/></svg>',
   studio:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m14 5 5 5M4 20l5-1 11-11a2.1 2.1 0 0 0-3-3L6 16z"/></svg>',
   gallery:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8" cy="9" r="2"/><path d="m21 16-5-5L5 21"/></svg>',
+  epochs:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 2M3 12h3"/></svg>',
   parent:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="3"/><path d="M5 21v-2a7 7 0 0 1 14 0v2M4 11v-4M20 11v-4"/></svg>'
 };
-const navLabels={lessons:"Уроки",studio:"Малювання",gallery:"Галерея",parent:"Батькам"};
+const navLabels={lessons:"Уроки",epochs:"Епохи",studio:"Малювання",gallery:"Галерея",parent:"Батькам"};
 nav.innerHTML=Object.keys(navLabels).map(k=>'<button id="nav-'+k+'" type="button" onclick="artNavigate(\''+k+'\')">'+icons[k]+'<span>'+navLabels[k]+'</span></button>').join("");
 let page="lessons", lessonId=-1, taskId=0, zoom=1, brush="pencil", inkColor="#6250a0", brushSize=6, penOnly=false, usePressure=true;
 let paintCanvas, bgCanvas, paintCtx, bgCtx, active=null, actions=[], redoActions=[], backgroundData=null, lastPenAt=0, panStart=null;
@@ -64,6 +66,7 @@ function drawPage(){
  const selected=(page==="lesson"||page==="library")?"lessons":page;
  document.getElementById("nav-"+selected)?.classList.add("active");
  if(page==="lessons")drawLessons();
+ else if(page==="epochs")main.innerHTML=window.KID_ART.timeline();
  else if(page==="library")drawLibrary();
  else if(page==="lesson")drawLesson();
  else if(page==="studio")drawStudio();
