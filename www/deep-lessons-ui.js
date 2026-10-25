@@ -8,9 +8,11 @@ function bind(data,save){store=data;storeFn=save;store.deepChecks=store.deepChec
 function look(i){
  const d=get(i);if(!d)return '';
  let html='<div class="deep-intro"><span class="v3-eyebrow">Майстер-клас · навчальна мета</span><h2 class="deep-intro-title">'+esc(d.goal)+'</h2><div class="deep-metadata"><span>'+esc(d.time)+'</span><span>'+esc(d.level)+'</span><span>3 пояснення + практика</span></div><p>У цьому уроці важливо не просто знати визначення, а спостерігати, пробувати та пояснювати рішення власними словами.</p></div>';
- html+='<div class="v3-block"><span class="v3-eyebrow">Поглиблена теорія</span><h3>Зрозумій, як це працює</h3><div class="deep-essay">'+d.ideas.map(p=>'<p>'+esc(p)+'</p>').join('')+'</div>';
+ html+='<div class="v3-block"><span class="v3-eyebrow">Поглиблена теорія</span><h3>Зрозумій, як це працює</h3><div class="deep-essay">'+d.ideas.map((p,k)=>'<p>'+esc(p)+'</p>'+window.KID_ART.plain(i,k)).join('')+'</div>';
  html+='<h3>Мистецький словник</h3><div class="deep-terms">'+d.terms.map(([term,description])=>'<div class="deep-term"><b>'+esc(term)+'</b><span>'+esc(description)+'</span></div>').join('')+'</div>';
  html+='<p class="deep-summary-note">Прочитай один термін уголос і поясни його іншими словами. Якщо можеш придумати власний приклад — ти його зрозуміла.</p></div>';
+ html+=window.KID_ART.story(i);
+ html+=window.KID_ART.lessonEra(i);
  return html;
 }
 function explore(i){

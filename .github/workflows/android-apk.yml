@@ -32,7 +32,7 @@ jobs:
       - name: Fetch and verify public-domain artworks and archival photographs
         run: node scripts/fetch-open-images.mjs
       - name: Validate scripts and all creative exercises
-        run: node scripts/check-app.mjs && node scripts/check-curriculum.mjs && node scripts/check-atelier-v3.mjs && node scripts/check-deep-art.mjs && node scripts/check-open-museum.mjs
+        run: node scripts/check-app.mjs && node scripts/check-curriculum.mjs && node scripts/check-atelier-v3.mjs && node scripts/check-deep-art.mjs && node scripts/check-open-museum.mjs && node scripts/check-kid-art-v6.mjs
       - name: Install dependencies
         run: npm install --no-audit --no-fund
       - name: Create Android project
