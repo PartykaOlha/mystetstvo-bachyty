@@ -57,5 +57,5 @@ jobs:
           if gh release view android-preview >/dev/null 2>&1; then
             gh release upload android-preview mystetstvo-bachyty.apk --clobber
           else
-            gh release create android-preview mystetstvo-bachyty.apk --title "Мистецтво бачити — APK" --notes "Попередня тестова версія Android для Samsung Galaxy Tab (debug APK)." --prerelease
+            gh release create android-preview mystetstvo-bachyty.apk --title "Вікторія DinLova — APK" --notes "Попередня тестова версія Android для Samsung Galaxy Tab (debug APK)." --prerelease
           fi
