@@ -82,7 +82,7 @@ function show(part){
  for(const b of document.querySelectorAll('.v3-step'))b.classList.toggle('active',b.dataset.section===part);
  const nav=document.getElementById('atelier-tabs');if(nav)nav.scrollIntoView({behavior:'smooth',block:'start'});
 }
-function lesson(i,content,data,guide,quizHtml,taskCard,lessonSources,colorLab){
+function lesson(i,content,data,guide,quizHtml,taskCard,lessonSources,colorLab,saveFn){
  const l=content[i],group=Math.max(0,modules.findIndex(m=>m[0]===l[0]));
  const m=modules[group],intro=thought[i]||'Що ти помічаєш у цьому зображенні?',num=String(i+1).padStart(2,'0');
  let html='<div class="page-top"><button class="v3-back" onclick="ATELIER.openUnit('+group+')">← '+esc(m[1])+'</button><span class="v3-eyebrow">Урок '+num+' / '+content.length+'</span></div>';
@@ -91,11 +91,17 @@ function lesson(i,content,data,guide,quizHtml,taskCard,lessonSources,colorLab){
  html+='<section class="v3-panel active" data-section="look"><div class="v3-block"><span class="v3-eyebrow">01 · Спостерігай</span><h3>Зрозумій головну ідею</h3><p>'+esc(l[2])+'</p>';
  guide.theory.forEach(t=>{html+='<p class="v3-insight">'+esc(t)+'</p>'});
  html+='<div class="v3-observe"><strong>Подивися уважно</strong><p>'+esc(intro)+'</p></div></div><div class="v3-block"><span class="v3-eyebrow">Словник художника</span><h3>Що варто запам’ятати?</h3><p>'+esc(guide.remember)+'</p><button class="btn" onclick="ATELIER.show(\'explore\')">Розглянути приклади →</button></div></section>';
+ html+=window.DEEP_UI.look(i);
  html+='<section class="v3-panel" data-section="explore"><div class="v3-block"><span class="v3-eyebrow">02 · Досліджуй</span><h3>Порівняй два рішення</h3><p>Приклади не потрібно копіювати. Спробуй помітити, як форма, колір і простір змінюють відчуття від роботи.</p><div class="v3-gallery-grid"><div class="v3-diagram-card">'+window.artExample(i,0)+'<h4>Приклад А</h4><p>Що тут найпомітніше?</p></div><div class="v3-diagram-card">'+window.artExample(i,1)+'<h4>Приклад Б</h4><p>Що змінилося в другій роботі?</p></div></div><div class="v3-challenge"><b>Дослідницьке запитання</b><p>'+esc(intro)+'</p></div>';
  if(i===5||i===20)html+=colorLab();
+ html+=window.DEEP_UI.explore(i);
  html+='<button class="btn" onclick="ATELIER.show(\'make\')">Перейти до творчості →</button></div></section>';
- html+='<section class="v3-panel" data-section="make"><div class="v3-section-heading"><div><span class="v3-eyebrow">03 · Творча майстерня</span><h2>Дві творчі роботи</h2><p>Крок за кроком — і місце для твоєї уяви</p></div></div><div class="v3-practice">'+taskCard(i,0)+taskCard(i,1)+'</div><div class="v3-callout"><b>Порада:</b> Почни з великих форм, перевір композицію, а потім додавай деталі. Ескіз можна змінювати.</div><button class="btn" onclick="ATELIER.show(\'review\')">До запитань →</button></section>';
- html+='<section class="v3-panel" data-section="review"><div class="v3-block"><span class="v3-eyebrow">04 · Розуміння й рефлексія</span><h3>Що ти зрозуміла?</h3><p>Обери відповіді на три питання. Помилки — частина навчання: після кожної спроби прочитай пояснення.</p><div id="quizHolder">'+quizHtml(i)+'</div></div><div class="v3-block"><span class="v3-eyebrow">Мій погляд</span><h3>Розкажи про свій вибір</h3><label for="lessonReflection">'+esc(window.ART_REFLECTION_PROMPTS[i])+'</label><textarea id="lessonReflection" rows="3" maxlength="2000" style="width:100%" placeholder="Що помітила? Що змінила б?">'+esc(data.reflections?.[i]||'')+'</textarea><p class="status" id="reflectionStatus"></p><button class="btn" onclick="artSaveReflection('+i+')">Зберегти думку</button></div><div class="v3-block">'+lessonSources(i)+'</div><div class="v3-block"><p>До уроку можна повертатися і покращувати власні роботи.</p><button class="btn" onclick="complete('+i+')">Завершити урок</button><button class="action alt" onclick="ATELIER.show(\'make\')">Ще помалювати</button></div></section>';
+ html+='<section class="v3-panel" data-section="make"><div class="v3-section-heading"><div><span class="v3-eyebrow">03 · Творча майстерня</span><h2>Дві творчі роботи</h2><p>Крок за кроком — і місце для твоєї уяви</p></div></div>';
+ html+=window.DEEP_UI.make(i);
+ html+='<div class="v3-practice">'+taskCard(i,0)+taskCard(i,1)+'</div><div class="v3-callout"><b>Порада:</b> Почни з великих форм, перевір композицію, а потім додавай деталі. Ескіз можна змінювати.</div><button class="btn" onclick="ATELIER.show(\'review\')">До запитань →</button></section>';
+ html+='<section class="v3-panel" data-section="review">';
+ html+=window.DEEP_UI.review(i,data,saveFn);
+ html+='<div class="v3-block"><span class="v3-eyebrow">04 · Розуміння й рефлексія</span><h3>Що ти зрозуміла?</h3><p>Обери відповіді на три питання. Помилки — частина навчання: після кожної спроби прочитай пояснення.</p><div id="quizHolder">'+quizHtml(i)+'</div></div><div class="v3-block"><span class="v3-eyebrow">Мій погляд</span><h3>Розкажи про свій вибір</h3><label for="lessonReflection">'+esc(window.ART_REFLECTION_PROMPTS[i])+'</label><textarea id="lessonReflection" rows="3" maxlength="2000" style="width:100%" placeholder="Що помітила? Що змінила б?">'+esc(data.reflections?.[i]||'')+'</textarea><p class="status" id="reflectionStatus"></p><button class="btn" onclick="artSaveReflection('+i+')">Зберегти думку</button></div><div class="v3-block">'+lessonSources(i)+'</div><div class="v3-block"><p>До уроку можна повертатися і покращувати власні роботи.</p><button class="btn" onclick="complete('+i+')">Завершити урок</button><button class="action alt" onclick="ATELIER.show(\'make\')">Ще помалювати</button></div></section>';
  return html;
 }
 function gallery(data,escapeFn){
