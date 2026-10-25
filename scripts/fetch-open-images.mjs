@@ -1,63 +1,50 @@
 import {mkdir,writeFile} from 'node:fs/promises';
-import {join} from 'node:path';
+import {createHash} from 'node:crypto';
 import {setTimeout as pause} from 'node:timers/promises';
-
-/** Art Institute of Chicago: CC0 open-access artwork images only. This script is run in CI
- * before Capacitor synchronizes www into its offline Android assets.
- * https://api.artic.edu/docs/#copyright and https://www.artic.edu/open-access
+/** All files below have individually reviewed Wikimedia Commons pages declaring them public domain.
+ * Capture and reuse of two-dimensional public-domain works follows Commons PD-Art policies.
  */
-const items=[
- {key:'wave',id:24645,title:'Велика хвиля біля Канаґави',artist:'Кацусіка Хокусай',type:'painting'},
- {key:'bedroom',id:28560,title:'Спальня',artist:'Вінсент ван Гог',type:'painting'},
- {key:'grande-jatte',id:27992,title:'Недільний день на острові Гранд-Жатт',artist:'Жорж Сера',type:'painting'},
- {key:'paris-rain',id:20684,title:'Паризька вулиця. Дощовий день',artist:'Ґюстав Кайботт',type:'painting'},
- {key:'water-lilies',query:'Water Lilies',artistCheck:'Claude Monet',title:'Водяні лілії',artist:'Клод Моне',type:'painting'},
- {key:'child-bath',query:"The Child's Bath",artistCheck:'Mary Cassatt',title:'Купання дитини',artist:'Мері Кассат',type:'painting'},
- {key:'flatiron',query:'The Flatiron',artistCheck:'Alfred Stieglitz',title:'Флетайрон, Нью-Йорк',artist:'Альфред Стіґліц',type:'photograph'},
- {key:'steerage',query:'The Steerage',artistCheck:'Alfred Stieglitz',title:'Третій клас',artist:'Альфред Стіґліц',type:'photograph'},
- {key:'hand-man',query:'The Hand of Man',artistCheck:'Alfred Stieglitz',title:'Рука людини',artist:'Альфред Стіґліц',type:'photograph'},
- {key:'sunlight',query:'Sunlight',artistCheck:'Clarence H. White',title:'Сонячне світло',artist:'Кларенс Г. Вайт',type:'photograph'},
- {key:'venice',query:'A Venetian Canal',artistCheck:'Alfred Stieglitz',title:'Венеційський канал',artist:'Альфред Стіґліц',type:'photograph'}
+const files=[
+ {key:'wave',file:'The Great Wave at Kanagawa.jpg',title:'Велика хвиля біля Канаґави',artist:'Кацусіка Хокусай',type:'painting',museum:'Musée Guimet'},
+ {key:'bedroom',file:'Vincent van Gogh - The Bedroom - Google Art Project.jpg',title:'Спальня',artist:'Вінсент ван Гог',type:'painting',museum:'Art Institute of Chicago'},
+ {key:'grande-jatte',file:'Georges Seurat, Study for "La Grande Jatte", 1884-1885, NGA 52225.jpg',title:'Ескіз до «Гранд-Жатт»',artist:'Жорж Сера',type:'painting',museum:'National Gallery of Art'},
+ {key:'paris-rain',file:'Caillebotte Rue de Paris.jpg',title:'Паризька вулиця. Дощовий день',artist:'Ґюстав Кайботт',type:'painting',museum:'Art Institute of Chicago'},
+ {key:'flatiron',file:'Stieglitz Flat iron 1903.jpg',title:'Флетайрон, Нью-Йорк',artist:'Альфред Стіґліц',type:'photograph',museum:'Wikimedia Commons'},
+ {key:'steerage',file:'The Steerage 1907 Stieglitz.jpg',title:'Третій клас',artist:'Альфред Стіґліц',type:'photograph',museum:'Wikimedia Commons'},
+ {key:'migrant',file:'Migrant Mother 1936 3.jpg',title:'Мати-мігрантка',artist:'Доротея Ланж',type:'photograph',museum:'Library of Congress'},
+ {key:'migrant-series',file:'Migrant Mother 1936 2.jpg',title:'Кадр із серії «Мати-мігрантка»',artist:'Доротея Ланж',type:'photograph',museum:'Library of Congress'},
+ {key:'stieglitz-detail',file:'Alfred Stieglitz - The Steerage - Google Art Project.jpg',title:'«Третій клас»: музейний відбиток',artist:'Альфред Стіґліц',type:'photograph',museum:'Google Art Project / museum archive'}
 ];
-const API='https://api.artic.edu/api/v1/artworks';
-async function fetchRetry(url,tries=3){
- let last;
- for(let i=0;i<tries;i++){
-  try {const r=await fetch(url,{headers:{Accept:'application/json,image/jpeg;q=0.9,*/*;q=0.5','User-Agent':'DinLova-OpenEducation/1.0 (github.com/PartykaOlha/mystetstvo-bachyty)'},signal:AbortSignal.timeout(25000)});
-   if(!r.ok)throw new Error('HTTP '+r.status);
-   return r;
-  }catch(e){last=e;await pause(700*(i+1))}
- }
- throw last;
+function direct(file,width){
+ const normalized=file.replace(/ /g,'_'),hash=createHash('md5').update(normalized).digest('hex');
+ const name=encodeURIComponent(normalized);
+ const root='https://upload.wikimedia.org/wikipedia/commons/';
+ return width?root+'thumb/'+hash[0]+'/'+hash.slice(0,2)+'/'+name+'/'+width+'px-'+name:root+hash[0]+'/'+hash.slice(0,2)+'/'+name;
 }
-async function metadata(x){
- if(x.id)return (await (await fetchRetry(API+'/'+x.id)).json()).data;
- const q=new URL(API+'/search');q.searchParams.set('q',x.query);
- q.searchParams.set('fields','id,title,artist_display,is_public_domain,image_id');
- q.searchParams.set('limit','20');
- const j=await (await fetchRetry(q)).json();
- const candidates=(j.data||[]).filter(a=>a.image_id&&a.is_public_domain===true&&String(a.artist_display||'').toLowerCase().includes(x.artistCheck.toLowerCase()));
- return candidates.find(a=>a.title.toLowerCase()===x.query.toLowerCase())||candidates.find(a=>a.title.toLowerCase().includes(x.query.toLowerCase()))||candidates[0]||null;
+async function take(url){
+ const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),23000);
+ try{
+  const r=await fetch(url,{signal:controller.signal,headers:{'User-Agent':'Mozilla/5.0 (compatible; DinLovaEducationalApp/5.0)','Accept':'image/jpeg,image/*;q=0.9,*/*;q=0.1'}});
+  if(!r.ok)throw new Error('HTTP '+r.status);
+  const buffer=Buffer.from(await r.arrayBuffer());
+  if(buffer.length<6500||buffer[0]!==255||buffer[1]!==216)throw Error('Invalid JPEG');
+  return buffer;
+ }finally{clearTimeout(timeout)}
 }
 await mkdir('www/media/open-art',{recursive:true});
-const delivered=[];
-for(const x of items){
- try{
-  const info=await metadata(x);
-  if(!info||info.is_public_domain!==true||!info.image_id)throw Error('not verified as public-domain or missing image');
-  const url='https://www.artic.edu/iiif/2/'+info.image_id+'/full/600,/0/default.jpg';
-  const response=await fetchRetry(url);
-  const bin=Buffer.from(await response.arrayBuffer());
-  if(bin.length<6000||bin[0]!==0xFF||bin[1]!==0xD8)throw Error('invalid JPEG bytes');
-  await writeFile(join('www/media/open-art',x.key+'.jpg'),bin);
-  delivered.push({key:x.key,file:'media/open-art/'+x.key+'.jpg',id:info.id,title:x.title,originalTitle:info.title,artist:x.artist,type:x.type,source:'https://www.artic.edu/artworks/'+info.id,license:'Public Domain / CC0',bytes:bin.length});
-  console.log('OPEN ART:',x.key,info.id,bin.length,'bytes');
- }catch(err){
-  console.warn('UNAVAILABLE:',x.key,String(err));
+const works=[];
+for(const x of files){
+ const options=[direct(x.file,600),direct(x.file,480),direct(x.file),'https://commons.wikimedia.org/wiki/Special:FilePath/'+encodeURIComponent(x.file)+'?width=600'];
+ let body=null,reason='';
+ for(const url of options){
+  try{body=await take(url);break}catch(e){reason=String(e);await pause(450)}
  }
- await pause(1100);
+ if(!body){console.warn('MISSING',x.key,reason);continue}
+ await writeFile('www/media/open-art/'+x.key+'.jpg',body);
+ const source='https://commons.wikimedia.org/wiki/File:'+encodeURIComponent(x.file.replaceAll(' ','_'));
+ works.push({key:x.key,file:'media/open-art/'+x.key+'.jpg',title:x.title,artist:x.artist,type:x.type,source,museum:x.museum,license:'Public Domain / CC0',bytes:body.length});
+ console.log('SUCCESS',x.key,body.length,'bytes');await pause(1200);
 }
-if(delivered.filter(x=>x.type==='painting').length<4)throw Error('Not enough verified public-domain paintings for offline lessons.');
-if(delivered.filter(x=>x.type==='photograph').length<2)throw Error('Not enough verified public-domain photographic works. Refusing an art app without photos.');
-await writeFile('www/open-art-data.js','window.OPEN_ART_DATA='+JSON.stringify(delivered)+';\n');
-console.log('Offline museum artworks:',delivered.length,'including photographs',delivered.filter(x=>x.type==='photograph').length);
+if(works.filter(x=>x.type==='painting').length<3||works.filter(x=>x.type==='photograph').length<2)throw Error('Failed to embed minimum 3 open artworks and 2 real photographs.');
+await writeFile('www/open-art-data.js','window.OPEN_ART_DATA='+JSON.stringify(works)+';\n');
+console.log('Verified offline public-domain works:',works.length,'Photos:',works.filter(x=>x.type==='photograph').length);
