@@ -6,6 +6,7 @@ const w={};const vm=createContext({window:w});
 for(const file of ["www/deep-lessons-a.js","www/deep-lessons-b.js","www/deep-lessons-c.js"]){
  new Script(read(file),{filename:file}).runInContext(vm);
 }
+w.KID_ART={plain:()=>"",story:()=>"",lessonEra:()=>""};
 w.artExample=(i,j)=>"<svg>Example</svg>";
 new Script(read("www/deep-lessons-ui.js"),{filename:"deep-lessons-ui.js"}).runInContext(vm);
 const lessons=w.DEEP_ART;
