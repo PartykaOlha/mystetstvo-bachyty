@@ -1,0 +1,95 @@
+/* DINLOVA V5 · colorful real-art visual education */
+:root{--art-blue:#135fc7;--art-pink:#ee3e86;--art-coral:#ff6b4a;--art-yellow:#ffd945;--art-mint:#3ecbb5;--art-purple:#7858ef;--paper:#fffaf4!important;--ivory:#fff!important;--plum:#322c45!important;--deep:#232946!important}
+body{background:#fffaf4!important;color:#292941!important}
+main{max-width:1350px!important}
+header{background:#ffffff!important;border-bottom:3px solid #fff0d1!important}
+header .brand-logo{background:linear-gradient(135deg,#ff447c,#ff995b)!important;font-family:Georgia,serif;box-shadow:0 5px 11px #fa5d8f35}
+header h1{font-weight:850;color:#2b2b51!important}
+header small{color:#8d488b!important;font-weight:800!important}
+.v3-hero{background:#4331a2!important;box-shadow:0 24px 40px #5a48b72b!important}
+.v3-hero-visual{background:#ef4c88!important}
+.v3-hero .v3-eyebrow,.v3-hero .v3-hero-badges span{color:#ffe7aa!important}
+.v3-hero-copy{background:linear-gradient(120deg,#5534ac 0%,#4331a2 80%)}
+.v3-hero-copy .v3-white-button{background:#ffe066!important;color:#34304d!important;font-size:15px;box-shadow:0 8px 24px #25005b30}
+.v3-stats{margin-top:18px}
+.v3-stat{border:2px solid #f3e0eb!important;box-shadow:0 8px 18px #4125470a}
+.v3-stat:nth-child(1){background:#fff0e0!important}.v3-stat:nth-child(2){background:#eef6ff!important}.v3-stat:nth-child(3){background:#edfff3!important}
+.v3-stat strong{color:#4436a0!important}
+.v3-section-heading h2,.open-home-head h2,.photo-missions-home h2{color:#303051!important;font-weight:850}
+.v3-module{border:2px solid #ede4ea!important;box-shadow:0 11px 24px #3130830b!important}
+.v3-module:nth-child(5n+1){background:#fff4e6}.v3-module:nth-child(5n+2){background:#eaffee}.v3-module:nth-child(5n+3){background:#fff0f8}.v3-module:nth-child(5n+4){background:#edf4ff}.v3-module:nth-child(5n){background:#fffae5}
+.v3-module-meta .v3-eyebrow{color:#6844a8!important}.v3-module-meta strong{color:#252d4f!important}
+.v3-module-arrow{background:#ffde68!important;color:#32204a!important;font-weight:900!important}
+.v3-journey{background:linear-gradient(105deg,#ffe3bf,#ffdfed)!important;border:1px solid #efc6a0}
+.v3-journey .v3-eyebrow{color:#b04764!important}
+.v3-lesson-banner{background:linear-gradient(120deg,#ffde8a,#ffc1e1)!important}
+.v3-lesson-banner-art{background:#fb95ad!important}
+.v3-unit-header{background:#f6e7fa!important}
+.v3-step.active{background:#6042bb!important;color:#fff}
+.v3-steps-nav{border:2px solid #ebe2fa!important}
+.v3-block{border:1.5px solid #eee4f4!important;background:#fff!important}
+.v3-block h3{color:#33295f!important}
+.v3-insight{border-color:#e44e93!important}
+.deep-case{border-left-color:#7b4cf0!important;background:#f6eeff!important}
+.deep-task-advanced{background:#e1fff3!important;border-left-color:#0da982!important}
+.deep-check.checked{background:#e4ffed!important}
+.v3-white-button,.photo-camera,.photo-soft-action,.open-gallery-grid button,.photo-mission-teasers button{font-family:inherit}
+.open-eyebrow{font-size:11px;letter-spacing:.12em;color:#7750d8;font-weight:900}
+.open-home-section{margin:24px 0 32px}
+.open-home-head{display:flex;align-items:center;justify-content:space-between;margin:0 0 13px}
+.open-home-head h2,.photo-missions-home h2{font-size:clamp(24px,3vw,32px);letter-spacing:-.04em;margin:5px 0}
+.open-home-head p,.photo-missions-home>p{color:#6a617b;font-size:14px;margin:5px 0 12px}
+.open-home-strip{display:flex;gap:13px;overflow:auto;scroll-snap-type:x mandatory;padding:6px 3px 17px}
+.open-home-tile{scroll-snap-align:start;display:flex;flex-direction:column;text-align:left;flex:none;width:clamp(190px,26vw,260px);background:#fff;border:2px solid #f0e6ed;border-radius:21px;padding:0;overflow:hidden;box-shadow:0 7px 16px #50376b12;color:#333249;cursor:pointer}
+.open-home-tile img{width:100%;height:175px;object-fit:cover;background:#e3d8cc;display:block}
+.open-home-tile b{padding:12px 13px 2px;font-size:14px;line-height:1.35}
+.open-home-tile small{padding:0 13px 14px;color:#81778c;font-size:12px}
+.photo-missions-home{margin:27px 0 30px;background:linear-gradient(125deg,#eaf7ff,#edfff6);padding:24px;border-radius:22px;border:2px solid #d1f2e9}
+.photo-mission-teasers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:15px}
+.photo-mission-teasers button{min-height:134px;padding:17px 16px;border-radius:15px;border:1px solid #c3e5e4;background:#fff;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;text-align:left;cursor:pointer;color:#283953}
+.photo-mission-teasers button span{font-size:10px;letter-spacing:.1em;color:#0b9d90;font-weight:900}
+.photo-mission-teasers button strong{font-size:16px;line-height:1.28}
+.photo-mission-teasers button small{font-size:12px;color:#138b80;font-weight:800}
+.v5-module-image{width:100%;height:100%;object-fit:cover;display:block}
+.v5-module-label{position:absolute;top:12px;left:12px;padding:7px 10px;background:#fffdf8e8;backdrop-filter:blur(5px);border-radius:8px;font-weight:900;font-size:10px;color:#4b3a57;letter-spacing:.06em}
+.v5-module-color-ribbon{position:absolute;bottom:0;left:0;right:0;height:7px;background:linear-gradient(90deg,#ec4883,#ffbf4c,#2bb8ac,#7463ef)}
+.v5-lesson-photo{width:100%;height:100%;object-fit:cover;display:block}
+.open-museum-section{background:linear-gradient(180deg,#eef4ff,#fff);padding:22px;border-radius:23px;margin:18px 0;border:2px solid #dee9ff}
+.open-heading h3{font-size:clamp(22px,3vw,29px);margin:6px 0;color:#342d61}
+.open-heading p{font-size:14px;line-height:1.65;color:#626477;margin:3px 0 18px}
+.open-gallery-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.open-work{border:1px solid #e5e2f5;background:#fff;border-radius:17px;overflow:hidden;box-shadow:0 10px 25px #6158a310}
+.open-work-media{height:clamp(220px,31vw,400px);background:#e8e0d9;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.open-card-img{height:100%;width:100%;object-fit:contain;cursor:zoom-in;display:block}
+.open-work-caption{padding:15px 17px 17px}
+.open-work-caption h4{margin:6px 0;color:#322b51;font-size:18px;line-height:1.35}
+.open-work-caption p{margin:3px 0 10px;font-size:13px;color:#6e6878}
+.open-work-caption a{font-size:12px;color:#5941b7;font-weight:800;display:block;margin-bottom:7px}
+.open-work-caption small{font-size:11px;color:#817784;display:block}
+.open-type{font-size:10px;font-weight:900;letter-spacing:.09em;color:#ee468e}
+.open-questions{background:#ffedf8;padding:19px 22px;border-radius:16px;margin:18px 0 0;border-left:5px solid #ec4698}
+.open-questions h4{font-size:17px;color:#7d3073;margin:0 0 7px}
+.open-questions p{font-size:14px;line-height:1.75;color:#533f5d;margin:7px 0}
+.open-viewer{position:fixed;z-index:400;inset:0;background:#130d24ee;padding:14px;display:flex;align-items:center;justify-content:center;overflow:auto}
+.open-viewer-inner{max-width:min(100%,1050px);width:100%;max-height:98vh;color:#fff;text-align:center;display:flex;flex-direction:column;gap:8px;align-items:center}
+.open-viewer-img{max-width:100%;max-height:73vh;object-fit:contain}
+.open-viewer-close{align-self:flex-end;background:#ffce63;color:#272043;padding:12px 16px;min-height:45px;font-size:14px;border-radius:10px;border:0;font-weight:900}
+.open-viewer-inner h3{color:white;margin:3px}
+.open-viewer-inner p{margin:4px;color:#e5dce8;font-size:12px}
+.photo-mission{background:linear-gradient(125deg,#f8efff,#e9f9ff);padding:23px 22px;margin:18px 0;border:2px solid #dfd2ff;border-radius:20px}
+.photo-mission-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.photo-mission h3{font-size:clamp(23px,3vw,29px);margin:9px 0 9px;color:#3a296a}
+.photo-mission-lead{font-size:15px;line-height:1.75;font-weight:600;color:#4a4965}
+.mission-tag{background:#ffefbb;color:#8f5920;padding:6px 11px;border-radius:18px;font-weight:800;font-size:11px}
+.photo-mission-steps{list-style:decimal;margin:10px 0 17px;padding-left:22px}
+.photo-mission-steps li{margin:8px 0;font-size:14px;line-height:1.6;color:#3e4165}
+.photo-mission-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.photo-camera{background:linear-gradient(90deg,#ff437f,#fa6850);font-size:14px;font-weight:850;color:white;border-radius:12px;padding:13px 17px;min-height:48px;cursor:pointer;display:inline-flex;align-items:center;box-shadow:0 7px 16px #d34e7829}
+.photo-camera input{display:none}
+.photo-soft-action{padding:13px 15px;min-height:48px;border-radius:11px;border:1px solid #b7c5e2;color:#39448a;background:#fff;font-weight:700}
+.mission-preview{margin-top:14px;background:#ffffffac;border-radius:12px;border:1px solid #e8deed;padding:12px}
+.mission-preview img{max-height:300px;max-width:100%;border-radius:9px;object-fit:contain}
+.mission-preview p{font-size:12px;color:#565070}
+.photo-status{font-size:13px;font-weight:700;color:#564aa7;margin:8px 0 0}
+@media(max-width:770px){.photo-mission-teasers{grid-template-columns:repeat(2,minmax(0,1fr))}.open-gallery-grid{grid-template-columns:1fr}.open-work-media{height:285px}}
+@media(max-width:480px){.photo-missions-home{padding:16px}.photo-mission-teasers{gap:8px}.photo-mission-teasers button{min-height:130px;padding:12px}.photo-mission-teasers button strong{font-size:13px}.open-museum-section{padding:14px}.open-work-media{height:240px}.open-home-tile{width:208px}.photo-mission{padding:16px}}
