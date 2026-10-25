@@ -6,7 +6,8 @@ const w={};const vm=createContext({window:w});
 for(const file of ["www/deep-lessons-a.js","www/deep-lessons-b.js","www/deep-lessons-c.js"]){
  new Script(read(file),{filename:file}).runInContext(vm);
 }
-new Script(read("www/deep-lessons-ui.js"),{filename:"deep-lessons-ui.js"});
+w.artExample=(i,j)=>"<svg>Example</svg>";
+new Script(read("www/deep-lessons-ui.js"),{filename:"deep-lessons-ui.js"}).runInContext(vm);
 const lessons=w.DEEP_ART;
 assert.equal(lessons.length,28,"Expected all 28 lessons");
 assert.equal(Object.keys(lessons).length,28);
@@ -27,6 +28,14 @@ for(let i=0;i<lessons.length;i++){
  assert.ok(d.stretch.length>=65,"Advanced challenge missing "+i);
  assert.ok(d.time&&d.level,"Duration and difficulty missing "+i);
  if(d.caseUrl)assert.match(d.caseUrl,/^https:\/\/(www\.)?[\w.-]+\/.+/);
+}
+for(let i=0;i<lessons.length;i++){
+ const look=w.DEEP_UI.look(i), explore=w.DEEP_UI.explore(i), make=w.DEEP_UI.make(i);
+ assert.ok(look.includes("Поглиблена теорія")&&look.includes("Мистецький словник"),"Lecture UI "+i);
+ assert.ok(explore.includes("розбір прикладу"),"Case study UI "+i);
+ assert.ok(make.includes("Зроби дослід")&&make.includes("Складніший рівень"),"Making UI "+i);
+ const review=w.DEEP_UI.review(i,{deepChecks:{},deepJournal:{}},()=>{});
+ assert.ok(review.includes("самооцінювання")||review.includes("оцінити"),"Rubric UI "+i);
 }
 const html=read("www/index.html");
 for(const file of ["deep-lessons-a.js","deep-lessons-b.js","deep-lessons-c.js","deep-lessons-ui.js","deep-lessons.css"]){
