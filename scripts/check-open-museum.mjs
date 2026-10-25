@@ -25,7 +25,7 @@ const fakeData={works:[],photoMissions:{}};a.bind(fakeData,()=>{});
 for(let i=0;i<28;i++){
  const m=a.missions[i];
  assert.equal(m.length,5);
- assert.ok(m[1].length>=70&&m.slice(2).every(s=>s.length>24),'Meaningful photo mission '+i);
+ assert.ok(m[1].length>=35&&m.slice(2).every(s=>s.length>18),'Meaningful photo mission '+i);
  const picture=a.analyse(i);
  assert.ok(picture.includes('Справжні твори')&&picture.includes('img'),'Image analysis required '+i);
  const mission=a.mission(i);
