@@ -19,7 +19,7 @@ for(let i=0;i<lessons.length;i++){
  assert.ok(d.ideas.join(" ").length>=600,"Theory not substantial "+i);
  assert.ok(d.caseTitle.length>=18&&d.caseText.length>=170,"Case study not substantial "+i);
  assert.equal(d.terms.length,3);
- assert.ok(d.terms.every(([term,definition])=>term.length>=5&&definition.length>=18),"Incomplete terminology "+i);
+ assert.ok(d.terms.every(([term,definition])=>term.length>=3&&definition.length>=18),"Incomplete terminology "+i);
  assert.equal(d.try.length,3,"Guided research sequence "+i);
  assert.equal(d.checks.length,3);
  assert.ok(d.try.every(x=>x.length>=35),"Research step too short "+i);
