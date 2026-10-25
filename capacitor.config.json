@@ -1,0 +1,8 @@
+{
+  "appId": "ua.partyka.mystetstvo",
+  "appName": "Мистецтво бачити",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  }
+}
