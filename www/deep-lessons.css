@@ -1,0 +1,48 @@
+
+/* Поглиблений урок: читання, музейний кейс, експеримент, рефлексія */
+.deep-intro{background:#f4ebe4;border:1px solid #e7d5c7;border-radius:18px;padding:20px 22px;margin-bottom:18px}
+.deep-intro-title{font-family:Georgia,serif;font-size:25px;line-height:1.22;margin:7px 0 10px;color:#493348;letter-spacing:-.02em}
+.deep-intro p{font-size:14px!important;line-height:1.75}
+.deep-metadata{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:12px 0}
+.deep-metadata span{display:inline-flex;align-items:center;padding:6px 11px;border-radius:20px;background:#fff7ed;border:1px solid #e9d8cb;color:#80595a;font-size:12px;font-weight:700}
+.deep-essay{margin:22px 0 4px;counter-reset:lessonParagraph}
+.deep-essay p{position:relative;font-size:16px!important;line-height:1.9!important;max-width:78ch;margin:16px 0 21px;letter-spacing:.005em}
+.deep-essay p:first-child:first-letter{font-family:Georgia,serif;font-size:23px;color:#9b6958;font-weight:700}
+.deep-terms{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:18px 0}
+.deep-term{background:#f6f0eb;border-radius:12px;padding:13px;min-height:94px}
+.deep-term b{display:block;color:#6a474d;font-size:13px;margin-bottom:5px}
+.deep-term span{display:block;font-size:12px;color:#655b61;line-height:1.6}
+.deep-case{border:1px solid #e3d0bf;border-left:5px solid #b88c6d;border-radius:13px;background:#f9efe4;padding:20px;margin:18px 0}
+.deep-case h3{margin:4px 0 10px;color:#724a3e}
+.deep-case p{margin:8px 0;line-height:1.8}
+.deep-case a{color:#6d4158;font-weight:800;display:inline-block;padding:9px 12px;background:#fff8f0;border-radius:9px;border:1px solid #e5d4c5;min-height:44px;text-decoration:none}
+.deep-steps{list-style:none;counter-reset:deepstep;padding:0;margin:18px 0}
+.deep-steps li{position:relative;counter-increment:deepstep;display:flex;gap:13px;align-items:flex-start;padding:12px 14px 13px 0;line-height:1.7;border-bottom:1px solid #e8ded7;font-size:15px}
+.deep-steps li:before{content:counter(deepstep);display:grid;place-items:center;flex:none;background:#dbc7b6;color:#60475b;border-radius:50%;width:30px;height:30px;font-size:13px;font-weight:800}
+.deep-task-advanced{border-radius:16px;padding:19px 21px;background:#e8ebe3;border-left:4px solid #678777;margin:16px 0}
+.deep-task-advanced h4{font-size:17px;margin:0 0 6px;color:#3f6755}
+.deep-task-advanced p{font-size:14px;line-height:1.7;margin:0}
+.deep-check-list{display:grid;gap:10px;margin:17px 0}
+.deep-check{display:flex;align-items:flex-start;gap:12px;background:#fffaf4;border:1px solid #e8ddd3;border-radius:13px;padding:14px;cursor:pointer;min-height:55px}
+.deep-check input{accent-color:#698b79;min-width:19px;min-height:19px;flex:none;margin-top:3px}
+.deep-check span{font-size:14px;line-height:1.5}
+.deep-check.checked{background:#ebf5ed;border-color:#b4d4bd}
+.deep-progress{height:10px;width:100%;border-radius:8px;background:#ece2d9;overflow:hidden;margin:14px 0 9px}
+.deep-progress i{display:block;background:#6d9a77;height:100%;transition:width .2s}
+.deep-feedback{color:#526d5b;font-size:13px;line-height:1.6;min-height:20px}
+.deep-comparison{background:#f8f1e7;border:1px solid #e8daca;border-radius:15px;padding:16px;margin:12px 0}
+.deep-comparison h4{margin:0 0 9px;font-size:16px}
+.deep-comparison p{font-size:13px;line-height:1.65}
+.deep-comparison .deep-control{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:10px 0}
+.deep-comparison label{font-size:13px;font-weight:700;color:#694d53}
+.deep-comparison input[type=range]{accent-color:#9a6d7b;width:min(270px,100%);max-width:100%}
+.deep-demo{height:220px;border-radius:11px;overflow:hidden;background:#f9f7f2;position:relative}
+.deep-demo svg{height:100%;width:100%}
+.deep-compare-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}
+.deep-option{font-size:13px;background:#fff;border:1px solid #d8cec8;border-radius:10px;min-height:48px;padding:10px 12px;cursor:pointer;font-weight:700;color:#54465c}
+.deep-option[aria-pressed=true]{background:#4d4059;color:#fff;border-color:#4d4059}
+.deep-summary-note{background:#f5eee8;padding:14px;border-radius:12px;color:#675861;font-size:13px;line-height:1.7}
+.deep-summary-note textarea{font-family:inherit;width:100%;min-height:90px;line-height:1.65;background:#fff;resize:vertical}
+.deep-save{background:#4d4059!important;color:#fff!important;border:0;border-radius:11px;padding:11px 17px;font-weight:750;min-height:44px;margin:9px 0}
+.deep-skip{font-size:12px;color:#897b79}
+@media(max-width:650px){.deep-terms{grid-template-columns:1fr}.deep-term{min-height:0}.deep-essay p{font-size:15px!important}.deep-intro{padding:16px}.deep-intro-title{font-size:21px}.deep-compare-options{grid-template-columns:1fr}.deep-demo{height:185px}}

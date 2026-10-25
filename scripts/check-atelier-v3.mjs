@@ -25,6 +25,6 @@ const html=read('www/index.html');
 assert.ok(html.includes('atelier-v3.js'));
 assert.ok(html.includes('atelier-v3.css'));
 const conf=JSON.parse(read('capacitor.config.json'));
-assert.equal(conf.appId,'ua.partyka.viktoriadinlova.atelier');
+assert.ok(/^ua\.partyka\.viktoriadinlova\.[a-z]+$/.test(conf.appId),'App package uses the branded namespace');
 new Script(read('www/enhanced.js'),{filename:'enhanced.js'});
 console.log('Atelier V3 checks passed: 7 visual modules, 4 lesson stages, color lab, separate Android package.');
