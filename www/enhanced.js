@@ -12,6 +12,7 @@ data.quizResults = data.quizResults || {};
 data.reflections = data.reflections || {};
 data.deepChecks = data.deepChecks || {};
 data.deepJournal = data.deepJournal || {};
+if(window.ART_PHOTOS)window.ART_PHOTOS.bind(data,save);
 const main = document.getElementById("app"), nav = document.querySelector(".nav");
 const icons = {
   lessons:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5.5C6 3.7 9.3 4.3 12 6c2.7-1.7 6-2.3 9-.5v13c-3-1.8-6.3-1.2-9 .5-2.7-1.7-6-2.3-9-.5zM12 6v13"/></svg>',
@@ -146,6 +147,7 @@ function drawParent(){
  let n=Object.keys(data.done).length, completed=Object.entries(data.quizResults).filter(([i,r])=>(r.answers||[]).length===3&&(r.answers||[]).every(Number.isInteger)), quizCount=completed.length, correct=completed.reduce((a,[i,r])=>a+Number(r.score||0),0),avg=quizCount?correct/(quizCount*3)*100:0;
  main.innerHTML='<div class="page-top"><h2>Батьківський кабінет</h2><button class="soft-button" onclick="artNavigate(\'lessons\')">До уроків</button></div>'+
  '<div class="two"><div class="card"><h3>Уроки</h3><b>'+n+' / '+content.length+'</b></div><div class="card"><h3>Тести</h3><b>'+Math.round(avg)+'% правильних</b></div><div class="card"><h3>Роботи</h3><b>'+data.works.length+'</b></div></div>'+
+ '<div class="card"><h3>Фотомісії</h3><p><b>'+Object.keys(data.photoMissions||{}).length+' із '+content.length+'</b> · виконано та збережено у творчій галереї.</p><p>Оцінюйте спостереження, композицію й сміливість експериментувати, а не лише красу знімка.</p></div>'+
  '<div class="card"><h3>Навчальні тести</h3><p>'+quizCount+' із '+content.length+' завершено • '+correct+' правильних із '+(quizCount*3)+' відповідей</p><p class="muted">Середній результат розраховано лише за завершеними тестами. Творчий поступ оцінюється окремо.</p></div>'+
  '<div class="card"><h3>Міркування дитини</h3>'+(Object.keys(data.reflections).length?Object.entries(data.reflections).filter(([i,t])=>t).map(([i,t])=>'<p><b>'+esc(content[i]?.[1]||'Урок')+': </b>'+esc(t)+'</p>').join(''):'<p class="muted">Після уроку дитина може пояснити свої творчі рішення власними словами.</p>')+'</div>'+
  '<div class="card"><h3>Творчі завдання</h3><b>'+Object.keys(data.taskDone).length+' із '+(content.length*2)+'</b><p class="muted">Завдання позначається виконаним після збереження роботи в галерею.</p></div>'+
