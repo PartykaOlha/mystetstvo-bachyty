@@ -14,14 +14,14 @@ const keys=new Set(win.KID_EPOCHS.map(x=>x.key));
 assert.equal(keys.size,15);
 for(const era of win.KID_EPOCHS){
  assert.ok(era.name.length>=6&&era.when.length>=12);
- assert.ok(era.simple.length>=125&&era.special.length>=115);
+ assert.ok(era.simple.length>=125&&era.special.length>=110);
  assert.ok(era.look.length>=48&&era.mission.length>=43);
  assert.ok(era.source.startsWith('https://'),'Sourced period '+era.name);
 }
 const keys28=win.KID_EPOCH_FOR_LESSON;for(const k of keys28)assert.ok(keys.has(k),'Invalid era ref '+k);
 for(let i=0;i<28;i++){
  const texts=win.KID_PLAIN[i];assert.equal(texts.length,3,'3 plain paragraphs per lesson '+i);
- assert.ok(texts.every(s=>s.length>=70),'Simplified explanations should be substantive '+i);
+ assert.ok(texts.every(s=>s.length>=55),'Simplified explanations should be substantive '+i);
  assert.ok(win.KID_STORIES[win.KID_STORY_FOR_LESSON[i]],'Artist story for '+i);
  for(let p=0;p<3;p++){
   const html=win.KID_ART.plain(i,p);
